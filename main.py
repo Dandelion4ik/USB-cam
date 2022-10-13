@@ -35,15 +35,13 @@ thickness_circle_rec = -1  # Толщина линии границы круга
 capture = cv2.VideoCapture(0)  # Захват видеопотока с web камеры
 
 filename_out = 'output.avi'  # Имя выходного видеофайла
-fps_out = 6  # Частота кадров выходного видеопотока
+fps_out = 8  # Частота кадров выходного видеопотока
 frame_size_out = (640, 480)  # Разрешение выходного потока
 fourcc = cv2.VideoWriter_fourcc(*'XVID')  # Кодек записи
 out = cv2.VideoWriter(filename_out, fourcc, fps_out, frame_size_out)  # Объект записи видео
 
-count = 0
 
-
-def face_control(img, count=count):
+def face_control(img, count):
     scale_factor = 1.1  # коэфицент увеличения размера окна поиска на каждой итерации
     min_neighbords = 6  # размер окна
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -51,12 +49,13 @@ def face_control(img, count=count):
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
         f = cv2.resize(gray_img[y:y + h, x:x + w], (200, 200))  # Создание кадра для идентицикатора
-        cv2.imwrite('jm1/%s.pgm' % str(count), f)  # Запись этого кадра
+        cv2.imwrite('db/identify/andrey/%s.pgm' % str(count), f)  # Запись этого кадра
         count += 1  # Итерация для записываемых кадров
-    return img
+    return img, count
 
 
 kol = 0  # Костыль для мигания кружочка индикации записи видеопотока
+count = 0 # Нумерация файлов идентификации одного человека
 while True:
     ret, img = capture.read()
     date_time = str(datetime.now())
@@ -72,7 +71,7 @@ while True:
                          color_circle_rec, thickness_circle_rec)  # Кружок для индикации записи видеопотока
         kol = 0
     kol += 1
-    img = face_control(img)  # Распознование лиц
+    img, count = face_control(img,count)  # Распознование лиц
     out.write(img)
     cv2.imshow("From Camera", img)  # Отображение изображения
 
