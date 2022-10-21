@@ -1,7 +1,8 @@
 import sys
-
+import numpy as np
 import cv2
 import os
+import database
 # import face_recognition as fr
 from datetime import datetime
 
@@ -41,6 +42,11 @@ fourcc = cv2.VideoWriter_fourcc(*'XVID')  # Кодек записи
 out = cv2.VideoWriter(filename_out, fourcc, fps_out, frame_size_out)  # Объект записи видео
 
 
+def identify():
+    dir = "db/identify/andrey/0.pgm"
+    images = cv2.imread(dir)
+
+
 def face_control(img, count):
     scale_factor = 1.1  # коэфицент увеличения размера окна поиска на каждой итерации
     min_neighbords = 6  # размер окна
@@ -55,7 +61,7 @@ def face_control(img, count):
 
 
 kol = 0  # Костыль для мигания кружочка индикации записи видеопотока
-count = 0 # Нумерация файлов идентификации одного человека
+count = 0  # Нумерация файлов идентификации одного человека
 while True:
     ret, img = capture.read()
     date_time = str(datetime.now())
@@ -71,8 +77,8 @@ while True:
                          color_circle_rec, thickness_circle_rec)  # Кружок для индикации записи видеопотока
         kol = 0
     kol += 1
-    img, count = face_control(img,count)  # Распознование лиц
-    out.write(img)
+    img, count = face_control(img, count)  # Распознование лиц
+    out.write(img)  # Запись
     cv2.imshow("From Camera", img)  # Отображение изображения
 
     k = cv2.waitKey(30)  # Считывания клавишы Esc для прекращения трансляции изображения
