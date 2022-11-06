@@ -1,5 +1,12 @@
 import sqlite3
 
+import pandas as pd
+import openpyxl as ox
+import shutil
+import cv2
+
+from openpyxl import load_workbook
+
 conn = sqlite3.connect('AllPersons.db')
 curr = conn.cursor()
 curr.execute("""CREATE TABLE IF NOT EXISTS consumer(
@@ -16,6 +23,8 @@ curr.execute("""CREATE TABLE IF NOT EXISTS time_tracking(
     FOREIGN KEY(userid) REFERENCES consumer (userid)
     )""")
 conn.commit()
+
+number_tabel = 1
 
 if __name__ == "__main__":
     command = ""
@@ -43,4 +52,10 @@ if __name__ == "__main__":
             curr.execute("UPDATE consumer SET status = ? WHERE consumer.userid = ?",
                          (user_status, userID))
             conn.commit()
-        #if command == ''
+        if command == 'tabel':
+            print("Enter userID")
+            userID = input()
+            shutil.copyfile('Tabel.xlsx',
+                            'db/Tabels/%sTabel.xlsx' % str(userID))  # CКОПИРОВАЛИ НЕЗАПОЛНЕННЫЙ ТАБЕЛЬ В ПАПКУ ЮЗЕРА
+            wb = load_workbook('db/Tabels/%sTabel.xlsx' % str(userID))
+            print(wb.sheetnames)
