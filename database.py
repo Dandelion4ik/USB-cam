@@ -45,12 +45,22 @@ if __name__ == "__main__":
             conn.commit()
         if command == 'delete':  # УДАЛЕНИЕ ПОЛЬЗОВАТЕЛЯ ИЗ ТАБЛИЦЫ
             print("Enter userID")
-            user = input()
-            curr.execute("DELETE FROM consumer WHERE consumer.userid = ?", user)
+            userID = input()
+            try:
+                curr.execute("SELECT userid FROM consumer WHERE userid = ?", userID)
+            except:
+                print('userID not found')
+                continue
+            curr.execute("DELETE FROM consumer WHERE consumer.userid = ?", userID)
             conn.commit()
         if command == 'status':  # ОБНОВИТЬ СТАТУС РАБОТНИКА
             print("Enter userID")
             userID = input()
+            try:
+                curr.execute("SELECT userid FROM consumer WHERE userid = ?", userID)
+            except:
+                print('userID not found')
+                continue
             print("Enter status")
             user_status = input()
             curr.execute("UPDATE consumer SET status = ? WHERE consumer.userid = ?",
