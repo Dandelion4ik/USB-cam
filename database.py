@@ -59,6 +59,11 @@ if __name__ == "__main__":
         if command == 'tabel':
             print("Enter userID")
             userID = input()
+            try:
+                curr.execute("SELECT userid FROM consumer WHERE userid = ?", userID)
+            except:
+                print('userID not found')
+                continue
             shutil.copyfile('Tabel.xlsx',
                             'db/Tabels/%sTabel.xlsx' % str(userID))  # CКОПИРОВАЛИ НЕЗАПОЛНЕННЫЙ ТАБЕЛЬ В ПАПКУ ЮЗЕРА
             wb = ox.load_workbook('db/Tabels/%sTabel.xlsx' % str(userID))
