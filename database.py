@@ -1,17 +1,8 @@
 import sqlite3
 from datetime import date
-from itertools import islice
-from openpyxl.utils.dataframe import dataframe_to_rows
-from openpyxl import Workbook
-from xlsxwriter import Workbook
-
-import pandas as pd
-
 import openpyxl as ox
 import shutil
 import cv2
-
-from openpyxl import load_workbook
 
 conn = sqlite3.connect('AllPersons.db')
 curr = conn.cursor()
@@ -29,6 +20,19 @@ curr.execute("""CREATE TABLE IF NOT EXISTS time_tracking(
     status BIT
     )""")
 conn.commit()
+
+haar_face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")  # Загрузка каскадного классификатора
+
+
+def photo(img, userID, count):
+    scale_factor = 1.1  # коэфицент увеличения размера окна поиска на каждой итерации
+    min_neighbords = 6  # размер окна
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    faces = haar_face_cascade.detectMultiScale(gray_img, scale_factor, min_neighbords)  # Поиск всех лиц
+    for (x, y, w, h) in faces:
+        f = cv2.resize(gray_img[y:y + h, x:x + w], (200, 200))  # Создание кадра для идентицикатора
+        cv2.imwrite('db/identify/%s_%s.pgm' % (userID, str(count)), f)  # Запись этого кадра
+
 
 if __name__ == "__main__":
     command = ""
@@ -116,3 +120,23 @@ if __name__ == "__main__":
             wb['стр.1'].cell(8, 157).value = date.today()
 
             wb.save('db/Tabels/%sTabel.xlsx' % str(userID))
+        if command == 'photographing':
+            print("Enter userID")
+            userID = input()
+            try:
+                curr.execute("SELECT userid FROM consumer WHERE userid = ?", userID)
+            except:
+                print('userID not found')
+                continue
+            capture = cv2.VideoCapture(0)
+            count = 0
+            while True:
+                ret, img = capture.read()
+                cv2.imshow("From Camera", img)
+                photo(img, userID, count)
+                count += 1  # Итерация для записываемых кадров
+                k = cv2.waitKey(30)  # Считывания клавишы Esc для прекращения трансляции изображения
+                if k == 27:
+                    break
+            capture.release()
+            cv2.destroyAllWindows()
