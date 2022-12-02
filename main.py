@@ -2,8 +2,7 @@ import sys
 import numpy as np
 import cv2
 import os
-import database
-# import face_recognition as fr
+import face_recognition
 from datetime import datetime
 
 haar_face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_default.xml")  # Загрузка каскадного классификатора
@@ -42,21 +41,46 @@ fourcc = cv2.VideoWriter_fourcc(*'XVID')  # Кодек записи
 out = cv2.VideoWriter(filename_out, fourcc, fps_out, frame_size_out)  # Объект записи видео
 
 
-def identify():
-    dir = "db/identify/andrey/0.pgm"
-    images = cv2.imread(dir)
+def find_encoding(images):
+    encode_list = []
+    for img in images:
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        encode = face_recognition.face_encodings(img)[0]
+        encode_list.append(encode)
+    return encode_list
+
+images = []
+class_name = []
+path = 'db/identify'
+mylist = os.listdir(path)
+for cls in mylist:
+    cur_img = cv2.imread(f'{path}/{cls}')
+    images.append(cur_img)
+    class_name.append(os.path.splitext(cls)[0])
+encode_list_know = find_encoding(images)
+
+
 
 
 def face_control(img, count):
     scale_factor = 1.1  # коэфицент увеличения размера окна поиска на каждой итерации
     min_neighbords = 6  # размер окна
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    bgra_ing = cv2.resize(img, (0, 0), None, 0.25, 0.25)
+    bgra_img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     faces = haar_face_cascade.detectMultiScale(gray_img, scale_factor, min_neighbords)  # Поиск всех лиц
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        f = cv2.resize(gray_img[y:y + h, x:x + w], (200, 200))  # Создание кадра для идентицикатора
-        cv2.imwrite('db/identify/andrey/%s.pgm' % str(count), f)  # Запись этого кадра
-        count += 1  # Итерация для записываемых кадров
+        #f = cv2.resize(gray_img[y:y + h, x:x + w], (200, 200))  # Создание кадра для идентицикатора
+    face_cur_frame = face_recognition.face_locations(bgra_img)
+    encode_cur_frame = face_recognition.face_encodings(bgra_img, face_cur_frame)
+    for encode_face, face_loc in zip(encode_cur_frame, face_cur_frame):
+        mathces = face_recognition.compare_faces(encode_list_know, encode_face)
+        face_dis = face_recognition.face_distance(encode_list_know, encode_face)
+        match_index = np.argmin(face_dis)
+        if mathces[match_index]:
+            name = class_name[match_index]
+            print(name)
     return img, count
 
 

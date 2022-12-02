@@ -1,7 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>{% block title %} Сотрудник с ID {{ post['title'] }} {% endblock %}</h2>
-<span class="badge badge-primary">{{ post['created'] }}</span>
-<p>{{ post['content'] }}</p>
+    <h2>{% block title %} Сотрудник с ID {{ post['title'] }} {% endblock %}</h2>
+    <span class="badge badge-primary">{{ post['created'] }}</span>
+    <p>{{ post['content'] }}</p>
+    {% if post['status'] == 'Принято' %}
+        <form action="{{ url_for('delete', id=post['id']) }}" method="POST">
+            <h1> Заявление принято
+            </h1>
+        </form>
+    {% endif %}
+
+    {% if post['status'] == 'Отказано' %}
+        <form action="{{ url_for('delete', id=post['id']) }}" method="POST">
+            <h1> Заявление не принято
+            </h1>
+        </form>
+    {% endif %}
 {% endblock %}

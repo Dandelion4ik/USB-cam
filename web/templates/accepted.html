@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Принятые заявления{% endblock %}</h1>
+    {% for post in posts %}
+        {% if (current_user.name == 'admin' or current_user.email==post['title']) and post['status'] == 'Принято' %}
+            <a href="{{ url_for('post', post_id=post['id']) }}">
+                <h2>ID{{ post['id'] }} {{ post['title'] }}</h2>
+            </a>
+            <span class="badge badge-primary">{{ post['created'] }}</span>
+            <hr>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

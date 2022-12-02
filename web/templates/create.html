@@ -1,23 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>{% block title %} Написать заявление {% endblock %}</h1>
+    <form method="post">
+        <h4> Выберите тип заявления</h4>
+        <input type="radio" class="radio" name="Тег"/> Основной оплачиваемый отпуск
+        <br><input type="radio" class="radio" name="Тег"/> Служебная командировка
+        <br><input type="radio" class="radio" name="Тег"/> Повышение квалификации с отрывом от работы
+        <br><input type="radio" class="radio" name="Тег"/> Забастовка
 
-<form method="post">
-    <div class="form-group">
-        <label for="title">ID работника</label>
-        <input type="text" name="title"
-               placeholder="Post title" class="form-control"
-               value="{{ request.form['title'] }}"></input>
-    </div>
+        <div class="form-group">
+            <br><h4> ID работника</h4>
+            <form>
+                <input type="text" name="title"
+                       placeholder="Введите ID"
+                       value="{{ request.form['title'] }}"></input>
+            </form>
+        </div>
 
-    <div class="form-group">
-        <label for="content">Заявление</label>
-        <textarea name="content" placeholder="Post content"
-                  class="form-control">{{ request.form['content'] }}</textarea>
-    </div>
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Отправить</button>
-    </div>
-</form>
+        <div class="form-group">
+            <h4> Дата</h4>
+            <form>
+                <pre>C <input type="text" name="Date_begin"
+                              placeholder="Введите дату"
+                              value="{{ request.form['date_begin'] }}"></input> по<form> <input type="text"
+                                                                                                name="Date_end"
+                                                                                                placeholder="Введите дату"
+                                                                                                value="{{ request.form['date_end'] }}"></input></pre>
+            </form>
+
+        </div>
+
+        <div class="form-group">
+            <h4> Заявление</h4>
+            <textarea name="content" placeholder="Введите текст"
+                      class="form-control">{{ request.form['content'] }}</textarea>
+        </div>
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Отправить</button>
+        </div>
+    </form>
 {% endblock %}
