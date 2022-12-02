@@ -3,7 +3,9 @@
 {% block content %}
     <h2>{% block title %} Сотрудник с ID {{ post['title'] }} {% endblock %}</h2>
     <span class="badge badge-primary">{{ post['created'] }}</span>
+    <p> <b>Тип заявления:</b> {{ post['code'] }}</p>
     <p>{{ post['content'] }}</p>
+    <p>C {{ post['date_begin'] }} по {{ post['date_end'] }}</p>
     {% if post['status'] == 'Принято' %}
         <form action="{{ url_for('delete', id=post['id']) }}" method="POST">
             <h1> Заявление принято

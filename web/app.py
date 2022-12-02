@@ -108,14 +108,17 @@ def create():
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
+        date_begin = request.form['date_begin']
+        date_end = request.form['date_end']
         status = 'Ожидание'
-
+        code = request.form['teg']
         if not title:
             flash('Title is required!')
         else:
             conn = get_db_connection()
-            conn.execute('INSERT INTO posts (title, content, status) VALUES (?, ?, ?)',
-                         (title, content, status))
+            conn.execute(
+                'INSERT INTO posts (title, content, status, date_begin, date_end, code) VALUES (?, ?, ?, ?, ?, ?)',
+                (title, content, status, date_begin, date_end, code))
             conn.commit()
             conn.close()
             return redirect(url_for('index'))
@@ -140,14 +143,17 @@ def edit(id):
     if request.method == 'POST':
         title = request.form['title']
         content = request.form['content']
+        date_begin = request.form['date_begin']
+        date_end = request.form['date_end']
+        code = request.form['code']
 
         if not title:
             flash('Title is required!')
         else:
             conn = get_db_connection()
-            conn.execute('UPDATE posts SET title = ?, content = ?'
+            conn.execute('UPDATE posts SET title = ?, content = ?, date_begin = ?, date_end = ?, code = ? '
                          ' WHERE id = ?',
-                         (title, content, id))
+                         (title, content, date_begin, date_end, code, id))
             conn.commit()
             conn.close()
             return redirect(url_for('index'))
@@ -176,6 +182,12 @@ def accept(id):
     conn.execute('UPDATE posts SET status = ? WHERE id = ?', (acc, id))
     conn.commit()
     conn.close()
+    # persons_conn = sqlite3.connect('./AllPersons.db')
+    # for it in range(int(post['date_begin']),int(post['date_end'] + 1)):
+    #     persons_conn.execute('UPDATE posts SET status = ? WHERE id = ?', (acc, id))
+    # #persons_conn.execute('UPDATE posts SET status = ? WHERE id = ?', (acc, id))
+    # #persons_conn.commit()
+    # persons_conn.close()
     flash('"{}" was successfully accepted!'.format(post['title']))
     return redirect(url_for('accepted'))
 

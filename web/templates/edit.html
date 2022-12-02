@@ -6,24 +6,41 @@
     <form method="post">
         <div class="form-group">
             <label for="title">ID работника</label>
-            <input type="text" name="title" placeholder="Post title"
-                   class="form-control"
-                   value="{{ request.form['title'] or post['title'] }}">
-            </input>
+            <br><input type="text" name="title" placeholder="Введите ID"
+                       value="{{ request.form['title'] or post['title'] }}">
+        </input>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Тип заявления</label>
+            <br><input type="text" name="code" placeholder="Введите тип"
+                       value= {{ request.form['code'] or post['code'] }}>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Дата</label>
+            <br>C <input type="text" name="date_begin"
+                         placeholder="Введите дату"
+                         value="{{ request.form['date_begin'] or post['date_begin'] }}"></input> по
+            <form><input type="text"
+                         name="date_end"
+                         placeholder="Введите дату"
+                         value="{{ request.form['date_end'] or post['date_end'] }}"></input>
         </div>
 
         <div class="form-group">
             <label for="content">Заявление</label>
-            <textarea name="content" placeholder="Post content"
+            <textarea name="content" placeholder="Заявление"
                       class="form-control">{{ request.form['content'] or post['content'] }}</textarea>
         </div>
-        {% if not post['status'] %}
+
+        {% if post['status'] == 'Ожидание' %}
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Редактировать</button>
             </div>
         {% endif %}
     </form>
-    <hr>
+    <br>
     {% if post['status'] == 'Ожидание' %}
         <form action="{{ url_for('accept', id=post['id']) }}" method="POST">
             <input type="submit" value="Принять заявление"
