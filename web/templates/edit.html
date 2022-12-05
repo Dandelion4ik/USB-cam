@@ -8,8 +8,21 @@
             <label for="title">ID работника</label>
             <br><input type="text" name="title" placeholder="Введите ID"
                        value="{{ request.form['title'] or post['title'] }}">
-        </input>
         </div>
+
+
+        {#        {% if post['code'] == '' %}#}
+        {#            <div class="form-group">#}
+        {#                <label for="content">Тип заявления</label>#}
+        {#                <br><input type="text" name="code" placeholder="Введите тип"#}
+        {#                           value= {{ request.form['code'] or post['code'] }}>#}
+        {#            </div>#}
+        {#        {% else %}#}
+        {#            <div class="form-group">#}
+        {#                <label for="content">Тип заявления</label>#}
+        {#                <br><label for="content"> {{ post['code'] }} </label>#}
+        {#            </div>#}
+        {#        {% endif %}#}
 
         <div class="form-group">
             <label for="content">Тип заявления</label>

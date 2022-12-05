@@ -112,7 +112,7 @@ def create():
         date_end = request.form['date_end']
         status = 'Ожидание'
         code = request.form['teg']
-        if not title:
+        if not title or not content or not date_begin or not date_end:
             flash('Title is required!')
         else:
             conn = get_db_connection()
