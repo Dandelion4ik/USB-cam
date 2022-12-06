@@ -135,6 +135,12 @@ def accepted():
     return render_template('accepted.html', posts=posts)
 
 
+@app.route('/tags', methods=('GET', 'POST'))
+@login_required
+def tags():
+    return render_template('tags.html')
+
+
 @app.route('/<int:id>/edit', methods=('GET', 'POST'))
 @login_required
 def edit(id):
