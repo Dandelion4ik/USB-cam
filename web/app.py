@@ -188,9 +188,14 @@ def accept(id):
     conn.execute('UPDATE posts SET status = ? WHERE id = ?', (acc, id))
     conn.commit()
     conn.close()
+    persons_conn = sqlite3.connect('../AllPersons.db')
+    persons_curr = persons_conn.cursor()
     # persons_conn = sqlite3.connect('./AllPersons.db')
-    # for it in range(int(post['date_begin']),int(post['date_end'] + 1)):
-    #     persons_conn.execute('UPDATE posts SET status = ? WHERE id = ?', (acc, id))
+    for it in range(int(post['date_begin']), int(post['date_end']) + 1):
+        persons_curr.execute(
+            "UPDATE time_tracking SET status = ? WHERE time_tracking.userid = ? and time_tracking.dates = ?",
+            (post['code'], post['title'], it))
+    persons_conn.commit()
     # #persons_conn.execute('UPDATE posts SET status = ? WHERE id = ?', (acc, id))
     # #persons_conn.commit()
     # persons_conn.close()
