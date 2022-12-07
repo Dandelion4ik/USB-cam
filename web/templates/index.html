@@ -6,7 +6,13 @@
         {% for post in posts %}
             {% if current_user.name == 'admin' or current_user.email==post['title'] %}
                 <a href="{{ url_for('post', post_id=post['id']) }}">
-                    <h2>ID{{ post['id'] }} {{ post['title'] }}</h2>
+                    {% if post['status'] == 'Принято' %}
+                        <h4><font color="green">[{{ post['id'] }}] Работник-{{ post['title'] }}</font></h4>
+                    {% elif post['status'] == 'Отказано' %}
+                        <h4><font color="red">[{{ post['id'] }}] Работник-{{ post['title'] }}</font></h4>
+                    {% else %}
+                        <h4>[{{ post['id'] }}] Работник-{{ post['title'] }}</h4>
+                    {% endif %}
                 </a>
                 <span class="badge badge-primary">{{ post['created'] }}</span>
                 {% if current_user.name == 'admin' %}

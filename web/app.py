@@ -183,14 +183,19 @@ def delete(id):
 @login_required
 def accept(id):
     post = get_post(id)
+    persons_conn = sqlite3.connect('../AllPersons.db')
+    persons_curr = persons_conn.cursor()
+    # persons_conn = sqlite3.connect('./AllPersons.db')
+    persons_curr.execute("SELECT EXISTS(SELECT * FROM time_tracking WHERE time_tracking.userid = ? )", (post['title'],))
+    exists = persons_curr.fetchone()
+    if not exists[0]:
+        flash('"{}" was not accepted! Error ID'.format(post['title']))
+        return redirect(url_for('index'))
     conn = get_db_connection()
     acc = 'Принято'
     conn.execute('UPDATE posts SET status = ? WHERE id = ?', (acc, id))
     conn.commit()
     conn.close()
-    persons_conn = sqlite3.connect('../AllPersons.db')
-    persons_curr = persons_conn.cursor()
-    # persons_conn = sqlite3.connect('./AllPersons.db')
     for it in range(int(post['date_begin']), int(post['date_end']) + 1):
         persons_curr.execute(
             "UPDATE time_tracking SET status = ? WHERE time_tracking.userid = ? and time_tracking.dates = ?",
