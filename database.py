@@ -112,12 +112,12 @@ if __name__ == "__main__":
                     if i[0] == 16:
                         half_day_cof = 7
                         wb['стр.1'].cell(13, 94).value = count_working_day
-                    if i[1]:
+                    if i[1] == 'Я':
                         count_working_day += 1
-                    if i[1]:
-                        wb['стр.1'].cell(13, 34 + (int(i[0]) - 1) * 4 + half_day_cof).value = "Я"
+                    if i[1] == 'Я':
+                        wb['стр.1'].cell(13, 34 + (int(i[0]) - 1) * 4 + half_day_cof).value = i[1]
                     else:
-                        wb['стр.1'].cell(13, 34 + (int(i[0]) - 1) * 4 + half_day_cof).value = "ПР"
+                        wb['стр.1'].cell(13, 34 + (int(i[0]) - 1) * 4 + half_day_cof).value = i[1]
                 wb['стр.1'].cell(13, 165).value = count_working_day
             elif type == 'свободный':
                 curr.execute("""select dates, status from time_tracking where userid = ?""", userID)
@@ -141,7 +141,7 @@ if __name__ == "__main__":
                             wb['стр.1'].cell(13, 94).value = str(count_day_hours)
                         else:
                             wb['стр.1'].cell(13, 94).value = str(count_day_hours) + ':' + str(count_day_minuts)
-                    if i[1]:
+                    if i[1] == 'Я':
                         if end_day_minuts - begin_day_minuts < 0:
                             end_day_hours -= 1
                             end_day_minuts += 60
@@ -154,7 +154,7 @@ if __name__ == "__main__":
                             count_day_hours += 1
                             count_day_minuts += 60
                             count_day_minuts -= end_day_minuts
-                    if i[1]:
+                    if i[1] == 'Я':
                         if end_day_minuts == 0:
                             wb['стр.1'].cell(13, 34 + (int(i[0]) - 1) * 4 + half_day_cof).value = str(
                                 end_day_hours)
@@ -162,7 +162,7 @@ if __name__ == "__main__":
                             wb['стр.1'].cell(13, 34 + (int(i[0]) - 1) * 4 + half_day_cof).value = str(
                                 end_day_hours) + ':' + str(end_day_minuts)
                     else:
-                        wb['стр.1'].cell(13, 34 + (int(i[0]) - 1) * 4 + half_day_cof).value = "ПР"
+                        wb['стр.1'].cell(13, 34 + (int(i[0]) - 1) * 4 + half_day_cof).value = i[1]
                 if count_day_minuts == 0:
                     wb['стр.1'].cell(13, 165).value = str(count_day_hours)
                 else:
