@@ -196,7 +196,9 @@ def accept(id):
     conn.execute('UPDATE posts SET status = ? WHERE id = ?', (acc, id))
     conn.commit()
     conn.close()
-    for it in range(int(post['date_begin']), int(post['date_end']) + 1):
+    date_begin = post['date_begin'].split("-")[0]
+    date_end = post['date_end'].split("-")[0]
+    for it in range(int(date_begin), int(date_end) + 1):
         persons_curr.execute(
             "UPDATE time_tracking SET status = ? WHERE time_tracking.userid = ? and time_tracking.dates = ?",
             (post['code'], post['title'], it))
