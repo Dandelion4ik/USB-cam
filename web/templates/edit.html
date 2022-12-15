@@ -47,6 +47,10 @@
                       class="form-control">{{ request.form['content'] or post['content'] }}</textarea>
         </div>
 
+
+
+
+
         {% if post['status'] == 'Ожидание' %}
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Редактировать</button>
@@ -85,5 +89,17 @@
             </h1>
         </form>
     {% endif %}
+    {##}
+    {##}
+    {##}
+    {#    <h4>Download File</h4>#}
+    {#    <body class="body">#}
+    {#    <div class="container" align="left">#}
+    {#        <a href="C:/Users/kavia/PycharmProjects/USB-cam/db/upload/{{ post['date_begin'] }}_{{ post['title'] }}"#}
+    {#           target="blank">#}
+    {#            <button class='btn btn-default'>Download</button>#}
+    {#        </a>#}
+    {#    </div>#}
+    {#    </body>#}
 
 {% endblock %}

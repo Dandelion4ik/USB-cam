@@ -1,6 +1,7 @@
+import os
 import sqlite3
 from werkzeug.exceptions import abort
-from flask import Flask, render_template, request, url_for, flash, redirect
+from flask import Flask, render_template, request, url_for, flash, redirect, send_file, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, login_user, login_required, logout_user, UserMixin
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -14,6 +15,10 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(100), nullable=False, unique=True)
     password = db.Column(db.String(100), nullable=False)
     name = db.Column(db.String(1000), nullable=False)
+
+
+UPLOAD_FOLDER = 'C:/Users/kavia/PycharmProjects/USB-cam/db/upload'
+ALLOWED_EXTENSIONS = {'pdf'}
 
 
 @manager.user_loader
@@ -110,6 +115,8 @@ def create():
         content = request.form['content']
         date_begin = request.form['date_begin']
         date_end = request.form['date_end']
+        file = request.files['file']
+        filename = str(date_begin + "_" + title + ".pdf")
         status = 'Ожидание'
         code = request.form['teg']
         if not title or not content or not date_begin or not date_end:
@@ -121,6 +128,8 @@ def create():
                 (title, content, status, date_begin, date_end, code))
             conn.commit()
             conn.close()
+            if file:
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('index'))
 
     return render_template('create.html')
