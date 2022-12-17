@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h2>{% block title %} Сотрудник с ID {{ post['title'] }} {% endblock %}</h2>
+    <span class="badge badge-primary">{{ post['created'] }}</span>
+    <p> <b>Тип заявления:</b> {{ post['code'] }}</p>
+    <p>{{ post['content'] }}</p>
+    <p>C {{ post['date_begin'] }} по {{ post['date_end'] }}</p>
+{% endblock %}

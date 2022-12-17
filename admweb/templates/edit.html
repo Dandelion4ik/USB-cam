@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Изменить "{{ post['userid'] }}" {% endblock %}</h1>
+
+    <form method="post">
+        <div class="form-group">
+            <label for="title">ID работника</label>
+            <br><input type="text" name="userid" placeholder="Введите ID"
+                       value="{{ request.form['userid'] or post['userid'] }}">
+        </div>
+
+        <div class="form-group">
+            <label for="content">Имя</label>
+            <input type="text" name="fname" placeholder="Введите имя"
+                   value= {{ request.form['fname'] or post['fname'] }}>
+            <label for="content">Фамилия</label>
+            <input type="text" name="lname" placeholder="Введите фамилию"
+                   value= {{ request.form['lname'] or post['lname'] }}>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Должность</label>
+            <input type="text" name="post" placeholder="Введите должность"
+                   value= {{ request.form['post'] or post['post'] }}>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Статус работника</label>
+            <input type="text" name="status" placeholder="Введите статус"
+                   value= {{ request.form['status'] or post['status'] }}>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Редактировать</button>
+        </div>
+    </form>
+    <form action="{{ url_for('delete', userid=post['userid']) }}" method="POST">
+        <input type="submit" value="Удалить работника"
+               class="btn btn-danger btn-sm"
+               onclick="return confirm('Are you sure you want to delete this post?')">
+    </form>
+{% endblock %}

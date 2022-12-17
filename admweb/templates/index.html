@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Работники{% endblock %}</h1>
+    {% for post in posts %}
+        <a href="{{ url_for('edit', userid=post['userid']) }}">
+            <h4> {{ post['fname'] }} {{ post['lname'] }}</h4>
+        </a>
+        <span class="badge badge-primary">ID - {{ post['userid'] }}</span>
+        <a href="{{ url_for('edit', userid=post['userid']) }}">
+            <span class="badge badge-warning">Изменить</span>
+        </a>
+        <hr>
+    {% endfor %}
+{% endblock %}

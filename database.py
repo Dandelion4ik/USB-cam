@@ -192,13 +192,13 @@ if __name__ == "__main__":
                 continue
             capture = cv2.VideoCapture(0)
             count = 0
-            while True:
+            while count != 15:
                 ret, img = capture.read()
                 cv2.imshow("From Camera", img)
                 photo(img, userID, count)
                 count += 1  # Итерация для записываемых кадров
-                k = cv2.waitKey(30)  # Считывания клавишы Esc для прекращения трансляции изображения
-                if k == 27:
-                    break
+                #k = cv2.waitKey(30)  # Считывания клавишы Esc для прекращения трансляции изображения
+                #if k == 27:
+                #    break
             capture.release()
             cv2.destroyAllWindows()

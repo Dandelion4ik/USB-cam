@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        <div class="form-group">
+            <br><h4> ID работника</h4>
+            <input type="text" name="userid"
+                   placeholder="Введите ID"
+                   value="{{ request.form['userid'] }}"></input>
+        </div>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Сгенерировать фотографии</button>
+        </div>
+    </form>
+{% endblock %}

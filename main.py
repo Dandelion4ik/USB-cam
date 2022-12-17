@@ -49,6 +49,7 @@ def find_encoding(images):
         encode_list.append(encode)
     return encode_list
 
+
 images = []
 class_name = []
 path = 'db/identify'
@@ -60,8 +61,6 @@ for cls in mylist:
 encode_list_know = find_encoding(images)
 
 
-
-
 def face_control(img, count):
     scale_factor = 1.1  # коэфицент увеличения размера окна поиска на каждой итерации
     min_neighbords = 6  # размер окна
@@ -71,7 +70,7 @@ def face_control(img, count):
     faces = haar_face_cascade.detectMultiScale(gray_img, scale_factor, min_neighbords)  # Поиск всех лиц
     for (x, y, w, h) in faces:
         cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        #f = cv2.resize(gray_img[y:y + h, x:x + w], (200, 200))  # Создание кадра для идентицикатора
+        # f = cv2.resize(gray_img[y:y + h, x:x + w], (200, 200))  # Создание кадра для идентицикатора
     face_cur_frame = face_recognition.face_locations(bgra_img)
     encode_cur_frame = face_recognition.face_encodings(bgra_img, face_cur_frame)
     for encode_face, face_loc in zip(encode_cur_frame, face_cur_frame):
