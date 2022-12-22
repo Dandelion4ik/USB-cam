@@ -109,18 +109,21 @@ def delete(userid):
 @admapp.route('/tabel', methods=('GET', 'POST'))
 def tabel():
     if request.method == 'POST':
-        userid = request.form['userid']
+        fname = request.form['fname']
+        lname = request.form['lname']
+        # userid = request.form['userid']
         type = request.form['type']
         conn = get_db_connection()
         curr = conn.cursor()
         try:
-            curr.execute("SELECT userid FROM consumer WHERE userid = ?", userid)
-            test = curr.fetchall()
-            test2 = test[0]
+            userid = conn.execute("SELECT userid FROM consumer WHERE fname = ? and lname = ?",
+                                  (fname, lname,)).fetchone()
+            userid = userid[0]
         except:
             flash('userID not found')
             return redirect(url_for('index'))
-        print("Enter type of work")
+        userid = conn.execute("SELECT userid FROM consumer WHERE fname = ? and lname = ?", (fname, lname,)).fetchone()
+        userid = userid[0]
         shutil.copyfile('Tabel.xlsx',
                         '../db/Tabels/%sTabel.xlsx' % str(userid))  # CКОПИРОВАЛИ НЕЗАПОЛНЕННЫЙ ТАБЕЛЬ В ПАПКУ ЮЗЕРА
         wb = ox.load_workbook('../db/Tabels/%sTabel.xlsx' % str(userid))
@@ -138,7 +141,7 @@ def tabel():
         wb['стр.1'].cell(7, 25).value = 'Первичный'
         # СТАТИСТИКА РАБОЧИХ ДНЕЙ ИЗ БД
         if type == 'жесткий':
-            curr.execute("""select dates, status from time_tracking where userid = ?""", userid)
+            curr.execute("select dates, status from time_tracking where userid = ?", (userid,))
             statistic_days = curr.fetchall()
             half_day_cof = 0
             count_working_day = 0
@@ -154,9 +157,9 @@ def tabel():
                     wb['стр.1'].cell(13, 34 + (int(i[0]) - 1) * 4 + half_day_cof).value = i[1]
             wb['стр.1'].cell(13, 165).value = count_working_day
         elif type == 'свободный':
-            curr.execute("""select dates, status from time_tracking where userid = ?""", userid)
+            curr.execute("""select dates, status from time_tracking where userid = ?""", (userid,))
             statistic_days = curr.fetchall()
-            curr.execute("""select dates, time_b, time_e from schedule where userid = ?""", userid)
+            curr.execute("""select dates, time_b, time_e from schedule where userid = ?""", (userid,))
             schedule_days = curr.fetchall()
             half_day_cof = 0
             count_day_hours = 0
@@ -203,11 +206,11 @@ def tabel():
                 wb['стр.1'].cell(13, 165).value = str(count_day_hours) + ':' + str(count_day_minuts)
 
         # ИМЯ ФАМИЛИЯ ДОЛЖНОСТЬ ID
-        curr.execute("""select fname from consumer where userid = ?""", userid)
+        curr.execute("""select fname from consumer where userid = ?""", (userid,))
         fname = curr.fetchall()
-        curr.execute("""select lname from consumer where userid = ?""", userid)
+        curr.execute("""select lname from consumer where userid = ?""", (userid,))
         lname = curr.fetchall()
-        curr.execute("""select post from consumer where userid = ?""", userid)
+        curr.execute("""select post from consumer where userid = ?""", (userid,))
         post = curr.fetchall()
         wb['стр.1'].cell(13, 1).value = fname[0][0] + ' ' + lname[0][0]
         wb['стр.1'].cell(13, 25).value = post[0][0]
@@ -223,16 +226,18 @@ def tabel():
 @admapp.route('/photo', methods=('GET', 'POST'))
 def photo():
     if request.method == 'POST':
-        userid = request.form['userid']
         conn = get_db_connection()
         curr = conn.cursor()
+        fname = request.form['fname']
+        lname = request.form['lname']
+        userid = conn.execute("SELECT userid FROM consumer WHERE fname = ? and lname = ?", (fname, lname,)).fetchone()
         try:
-            curr.execute("SELECT userid FROM consumer WHERE userid = ?", userid)
-            test = curr.fetchall()
-            test2 = test[0]
+            test = conn.execute("SELECT userid FROM consumer WHERE fname = ? and lname = ?", (fname, lname,)).fetchone()
+            test = test[0]
         except:
             flash('userID not found')
             return redirect(url_for('index'))
+        userid = userid[0]
         capture = cv2.VideoCapture(0)
         count = 0
         while count != 15:
